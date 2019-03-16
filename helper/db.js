@@ -9,4 +9,5 @@ module.exports = () => { //mongoose dışarı aktaran fonksiyon
 	mongoose.connection.on('error',(err) => {//trigger error
 		console.log("MongoDB Error: "+err);
 	});
+	mongoose.Promise = global.Promise; // promise ayarlaması then catch için
 }

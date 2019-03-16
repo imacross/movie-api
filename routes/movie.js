@@ -16,10 +16,22 @@ router.post('/',(req, res, next) => {
 		//year:year
 	//});
 	//yeni kaydediliyor
+	/*
 	movie.save((err,data)=>{
 		if(err)
 			res.json(err);
 		res.json(data);
+	});
+*/
+
+	// yukardaki yapı yerine promise yapısı daha güvenli, db.js içerisine de ayarlama yapmak gerekli
+	
+	const promise = movie.save(); // promise eşitledik
+
+	promise.then((data)=>{
+		res.json({status:1});
+	}).catch((err)=>{
+		res.json(err);
 	});
 
 });
