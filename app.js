@@ -10,7 +10,6 @@ const app = express();
 //--movie route bağlantısı
 
 const movie = require('./routes/movie.js'); //movie değişkenine routesı atadım
-app.use('/api/movie', movie); // movie route u /api/movie ye bağladım
 //--db connection
 
 const db = require('./helper/db.js')(); //sonuna() eklediğimiz için fonksiyon direk çalışıyor
@@ -26,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-
+app.use('/api/movie', movie); // movie route u /api/movie ye bağladım
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
