@@ -5,28 +5,20 @@ const router = express.Router();
 const Movie = require('../models/Movie.js')
 // '/' için get isteği, tüm datalar geri dönsün
 //ALLGET TUM KAYITLARI LISTELE
-router.get('/',(req,res)=>{
 
-	const promise = Movie.aggregate([
-		{
-			$lookup:{
-				from: 'directors',
-				localField: 'director_id',
-				foreignField: '_id',
-				as: 'director'
-			}
-		},
-		{
-			$unwind: '$director'
-		}
-	]);
-	
-	promise.then((data)=>{ //data dönsün
-		res.json(data);
-	}).catch((err)=>{ //error dönsün
+router.get('/', (req, res, next) => {
+	const promise = Movie.find({  });
+
+	promise.then((movie) => {
+		console.log(movie);
+		if (!movie)
+			next({ message: 'The movie was not found.', code: 99 });
+
+		res.json(movie);
+	}).catch((err) => {
 		res.json(err);
 	});
- })
+});
 
 //TOP10 ISLEMI
 
