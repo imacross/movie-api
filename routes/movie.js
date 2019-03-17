@@ -7,7 +7,19 @@ const Movie = require('../models/Movie.js')
 //ALLGET TUM KAYITLARI LISTELE
 router.get('/',(req,res)=>{
 
-	const promise = Movie.find({  }); //promise find ile arama yapılıyr
+	const promise = Movie.aggregate([
+		{
+			$lookup:{
+				from: 'directors',
+				localField: 'director_id',
+				foreignField: '_id',
+				as: 'director'
+			}
+		},
+		{
+			$unwind: '$director'
+		}
+	]);
 	
 	promise.then((data)=>{ //data dönsün
 		res.json(data);

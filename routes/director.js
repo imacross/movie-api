@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');//type kullandığımız için
 const express = require('express');
 const router = express.Router();
 
@@ -65,20 +66,58 @@ router.post('/',(req,res,next)=>{
  })
 
 //DIRECTOR FINDBYID
-
-router.get('/:director_id', (req, res, next) => {
-	const promise = Director.findById(req.params.director_id);
-
-	promise.then((director) => {
-		console.log(director);
-		if (!director)
-			next({ message: 'The movie was not found.', code: 99 });
-
-		res.json(director);
-	}).catch((err) => {
+router.get('/:director_id',(req,res)=>{
+	//bu match i sadece belirli bir director çıksın diye ekledik. mongoose suz yazarsak boş döner.
+	const promise = Director.aggregate([
+		{
+			$match:{
+				'_id' : mongoose.Types.ObjectId(req.params.director_id) 
+			}
+		},
+		{
+			$lookup:{ // join işlemi
+				from: 'movies', //nereyle join edilecek collections la
+				localField: '_id', //director tablosundan hangi alanla eşleştireceksin
+				foreignField: 'director_id',    //movies te hangi collection ile eşleşecek
+				as:'movies'//nereye atanacak, title year gibi
+			}
+		},
+			{
+				$unwind: {
+					path: '$movies',
+					preserveNullAndEmptyArrays: true //filmi olmayan yönetmenleride bas
+				}
+			},
+		{ //yönetmenlerin tüm filmleri tek çatı altında sıralansın
+			$group: {
+				_id: {
+					_id: '$_id',
+					name: '$name',
+					surname: '$surname',
+					bio: '$bio'
+				}, 
+				movies: {
+					$push: '$movies'
+				}
+			}
+		},
+		{ // id içinde id olayını düzeltir
+			$project: {
+				_id:'$_id._id',
+				name: '$_id.name',
+				surname: '$_id.surname',
+				movies: '$movies'
+			}
+		}
+	]);
+	
+	promise.then((data)=>{ //data dönsün
+		res.json(data);
+	}).catch((err)=>{ //error dönsün
 		res.json(err);
 	});
-});
+ })
+
 
 //DIRECTOR GUNCELLEME
 router.put('/:director_id', (req, res, next) => {
