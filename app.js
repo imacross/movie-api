@@ -8,6 +8,10 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
+//middleware include
+const verifyToken = require('./middleware/verify-token.js');
+
+
 //--movie route bağlantısı
 const movie = require('./routes/movie.js'); //movie değişkenine routesı atadım
 const director = require('./routes/director.js'); //movie değişkenine routesı atadım
@@ -17,6 +21,9 @@ const director = require('./routes/director.js'); //movie değişkenine routesı
 //--db connection
 
 const db = require('./helper/db.js')(); //sonuna() eklediğimiz için fonksiyon direk çalışıyor
+//config js
+const config = require('./config.js');
+app.set('api_secret_key', config.api_secret_key);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api',verifyToken);//tüm istekler ilk burdan geçer
 app.use('/api/movies', movie); // movie route u /api/movie ye bağladım
 app.use('/api/directors', director); // movie route u /api/movie ye bağladım
 // catch 404 and forward to error handler

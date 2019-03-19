@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs'); //password şifreleme için
 
 //Modals include
@@ -12,7 +13,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
+//token oluşturma 
 router.post('/register', function(req, res, next) {
 	const {username,password} = req.body;
 	
@@ -38,29 +39,40 @@ bcrypt.hash(password, 10, (err, hash)=> {
 
 //authenticate islemleri
 router.post('/auth', (req,res) => {
-	const {username, password} = req.body;
+	const {username, password} = req.body; //username ve pass aldık
 
-	User.findOne({
+	User.findOne({ //username i aradı ve esitledi
 		username
-	},(err,user) => {
+	},(err,user) => { 
 		//hata varsa
-		if(err)
+		if(err)			//hata varsa throw et
 			throw err;
-		//user yoksa
-		if(!user){
+
+		if(!user){ //user yoksa
 			res.json({
 				status: false,
 				massage: 'Auth Failed, user not found!'
 			});
 		}else{//user varsa
-			bcrypt.compare(password,user.password).then((result)=>{
+			bcrypt.compare(password,user.password).then((result)=>{ //karsilastirma
 				if(!result){//şifre yanlışsa
 				res.json({
 					status: false,
 					massage: 'Auth Failed, wrong password'
-				});
+				});//config.js  oluşturduk app.js e ddahil ettik
 				}else{//şifrede doğruysa token oluştur
-					
+					const payload = {//payload username esitleme
+						username
+					};
+					//ilk payload, iki configteki, üç ayar.
+					const token = jwt.sign(payload,req.app.get('api_secret_key'),{
+						expiresIn: 720 // 12 saat izin verildi
+					});
+					//tokenı döndür. token = token
+					res.json({
+						status: true,
+						token
+					});
 				}
 			});
 		}
