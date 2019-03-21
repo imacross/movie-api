@@ -10,7 +10,6 @@ router.get('/', (req, res, next) => {
 	const promise = Movie.find({  });
 
 	promise.then((movie) => {
-		console.log(movie);
 		if (!movie)
 			next({ message: 'The movie was not found.', code: 99 });
 
