@@ -118,7 +118,7 @@ router.post('/',(req, res, next) => {//postla ekleme metodu
 	const promise = movie.save(); // promise eşitledik
 
 	promise.then((data)=>{
-		res.json({status:1});
+		res.json(data);
 	}).catch((err)=>{
 		res.json(err);
 	});
