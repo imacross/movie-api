@@ -1,7 +1,13 @@
+[![Build status](https://api.travis-ci.org/imacross/movie-api.svg)](https://travis-ci.org/imacross/movie-api/)
+
+# node-egitimi-movie-api
+Bu projede öğrenilen bilgilerin pekiştirilmesi için Movie-Api adında bir RESTful API oluşturulmuştur. 
+Proje için testler yazılmış, sürekli entegrasyon sağlanmış ve deploy işlemleri uygulanmıştır. 
+Kaynak kodlarda yapılan işlemlerin açıklaması yorum satırları ile belirtilmiştir
 
 # Movies
- 
-| Route | HTTP Verb | POST body | Description |
+
+| Route | HTTP Verb	 | POST body	 | Description	 |
 | --- | --- | --- | --- |
 | /api/movies | `GET` | Empty | List all movies. |
 | /api/movies | `POST` | {'title':'foo', 'category':'bar', 'country':'Turkey', year:1990, director:"id", imdb_score: 9.7 } | Create a new movie. |
@@ -10,10 +16,10 @@
 | /api/movies/:movie_id | `DELETE` | Empty | Delete a movie. |
 | /api/movies/top10 | `GET` | Empty | Get the top 10 movies. |
 | /api/movies/between/:start_year/:end_year | `GET` | Empty | Movies between two dates. |
- 
+
 # Directors
- 
-| Route | HTTP Verb | POST body | Description |
+
+| Route | HTTP Verb	 | POST body	 | Description	 |
 | --- | --- | --- | --- |
 | /api/directors | `GET` | Empty | List all directors. |
 | /api/directors | `POST` | { name: 'foo', surname:'bar', bio:'lorem ipsum' } | Create a new director. |
@@ -21,11 +27,16 @@
 | /api/directors/:director_id | `PUT` | {'name':'foo', 'surname':'bar', 'bio': 'lorem'} | Update a director with new info. |
 | /api/directors/:director_id | `DELETE` | Empty | Delete a director. |
 | /api/directors/:director_id/best10movie | `GET` | Empty | The director's top 10 films. |
- 
+
 # Index
- 
-| Route | HTTP Verb | POST body | Description |
+
+| Route | HTTP Verb	 | POST body	 | Description	 |
 | --- | --- | --- | --- |
 | /register | `POST` | { username: 'foo', password:'1234' } | Create a new user. |
 | /authenticate | `POST` | { username: 'foo', password:'1234' } | Generate a token. |
 
+
+# Demo
+[Live demo on Heroku](https://imacross-movie-api.herokuapp.com/)
+
+İyi çalışmalar
